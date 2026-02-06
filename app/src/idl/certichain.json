@@ -1,0 +1,620 @@
+{
+  "address": "X85toAsqo5upL52MeH7NoCUcNYvzVCG5EFzrSK2f4Tn",
+  "metadata": {
+    "name": "certichain",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "CertiChain — On-chain certificate issuance and verification on Solana"
+  },
+  "instructions": [
+    {
+      "name": "initialize_admin",
+      "docs": [
+        "Initialize the admin / DAO account.",
+        "The signer becomes the sole authority who can verify or revoke issuers."
+      ],
+      "discriminator": [
+        35,
+        176,
+        8,
+        143,
+        42,
+        160,
+        61,
+        158
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  100,
+                  109,
+                  105,
+                  110
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "issue_certificate",
+      "docs": [
+        "Issue a new certificate. Only **verified, non-revoked** issuers may call.",
+        "The certificate PDA is derived from the issuer authority + certificate_id."
+      ],
+      "discriminator": [
+        61,
+        197,
+        55,
+        28,
+        159,
+        18,
+        132,
+        128
+      ],
+      "accounts": [
+        {
+          "name": "certificate",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  101,
+                  114,
+                  116,
+                  105,
+                  102,
+                  105,
+                  99,
+                  97,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              },
+              {
+                "kind": "arg",
+                "path": "certificate_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "issuer",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  105,
+                  115,
+                  115,
+                  117,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "issuer"
+          ]
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "student_name",
+          "type": "string"
+        },
+        {
+          "name": "course_name",
+          "type": "string"
+        },
+        {
+          "name": "certificate_hash",
+          "type": "string"
+        },
+        {
+          "name": "certificate_id",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "register_issuer",
+      "docs": [
+        "Register a new issuer. Starts as **unverified** — the admin must",
+        "call `verify_issuer` before this account can issue certificates."
+      ],
+      "discriminator": [
+        145,
+        117,
+        52,
+        59,
+        189,
+        27,
+        127,
+        18
+      ],
+      "accounts": [
+        {
+          "name": "issuer",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  105,
+                  115,
+                  115,
+                  117,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "institution_name",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "revoke_certificate",
+      "docs": [
+        "Revoke a certificate. Only the **original issuer** may revoke."
+      ],
+      "discriminator": [
+        236,
+        5,
+        130,
+        119,
+        9,
+        164,
+        130,
+        122
+      ],
+      "accounts": [
+        {
+          "name": "certificate",
+          "writable": true
+        },
+        {
+          "name": "issuer",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  105,
+                  115,
+                  115,
+                  117,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "issuer"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "revoke_issuer",
+      "docs": [
+        "Admin revokes an issuer, permanently blocking further issuance."
+      ],
+      "discriminator": [
+        17,
+        145,
+        62,
+        240,
+        50,
+        135,
+        145,
+        181
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  100,
+                  109,
+                  105,
+                  110
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "issuer",
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "admin"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "verify_issuer",
+      "docs": [
+        "Admin verifies an issuer, unlocking their ability to issue certificates."
+      ],
+      "discriminator": [
+        175,
+        158,
+        45,
+        6,
+        185,
+        85,
+        67,
+        61
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  100,
+                  109,
+                  105,
+                  110
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "issuer",
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "admin"
+          ]
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "AdminAccount",
+      "discriminator": [
+        153,
+        119,
+        180,
+        178,
+        43,
+        66,
+        235,
+        148
+      ]
+    },
+    {
+      "name": "CertificateAccount",
+      "discriminator": [
+        9,
+        141,
+        26,
+        14,
+        246,
+        14,
+        202,
+        133
+      ]
+    },
+    {
+      "name": "IssuerAccount",
+      "discriminator": [
+        126,
+        234,
+        14,
+        239,
+        71,
+        204,
+        88,
+        61
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InstitutionNameTooLong",
+      "msg": "Institution name exceeds maximum length of 64 characters"
+    },
+    {
+      "code": 6001,
+      "name": "EmptyInstitutionName",
+      "msg": "Institution name cannot be empty"
+    },
+    {
+      "code": 6002,
+      "name": "StudentNameTooLong",
+      "msg": "Student name exceeds maximum length of 64 characters"
+    },
+    {
+      "code": 6003,
+      "name": "CourseNameTooLong",
+      "msg": "Course name exceeds maximum length of 128 characters"
+    },
+    {
+      "code": 6004,
+      "name": "CertificateHashTooLong",
+      "msg": "Certificate hash exceeds maximum length of 64 characters"
+    },
+    {
+      "code": 6005,
+      "name": "CertificateIdTooLong",
+      "msg": "Certificate ID exceeds maximum length of 64 characters"
+    },
+    {
+      "code": 6006,
+      "name": "EmptyField",
+      "msg": "Required field cannot be empty"
+    },
+    {
+      "code": 6007,
+      "name": "IssuerNotVerified",
+      "msg": "Issuer is not verified by admin"
+    },
+    {
+      "code": 6008,
+      "name": "IssuerRevoked",
+      "msg": "Issuer has been revoked"
+    },
+    {
+      "code": 6009,
+      "name": "UnauthorizedAdmin",
+      "msg": "Unauthorized: not the admin authority"
+    },
+    {
+      "code": 6010,
+      "name": "UnauthorizedIssuer",
+      "msg": "Unauthorized: not the issuer authority"
+    },
+    {
+      "code": 6011,
+      "name": "CertificateAlreadyRevoked",
+      "msg": "Certificate has already been revoked"
+    },
+    {
+      "code": 6012,
+      "name": "Overflow",
+      "msg": "Arithmetic overflow"
+    }
+  ],
+  "types": [
+    {
+      "name": "AdminAccount",
+      "docs": [
+        "Global admin / DAO account — controls issuer verification."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "docs": [
+              "Wallet that has admin privileges"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "created_at",
+            "docs": [
+              "When the admin was initialized (unix ts)"
+            ],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CertificateAccount",
+      "docs": [
+        "Certificate account — an immutable, on-chain credential."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "issuer",
+            "docs": [
+              "Public key of the issuer who created this certificate"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "student_name",
+            "docs": [
+              "Name of the student / recipient"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "course_name",
+            "docs": [
+              "Name of the course or credential"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "certificate_hash",
+            "docs": [
+              "SHA-256 hash of the full certificate data"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "certificate_id",
+            "docs": [
+              "Unique identifier (used in PDA derivation)"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "issued_at",
+            "docs": [
+              "Unix timestamp when issued"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "is_revoked",
+            "docs": [
+              "Whether this certificate has been revoked"
+            ],
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "IssuerAccount",
+      "docs": [
+        "Issuer account — represents an institution that can issue certificates."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "docs": [
+              "Wallet that owns this issuer profile"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "institution_name",
+            "docs": [
+              "Human-readable institution name"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "is_verified",
+            "docs": [
+              "Set to `true` by admin to unlock issuance"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "is_revoked",
+            "docs": [
+              "Set to `true` by admin to permanently block issuance"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "certificates_issued",
+            "docs": [
+              "Running count of certificates issued"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "reputation_score",
+            "docs": [
+              "Reputation score — +10 per certificate issued"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "registered_at",
+            "docs": [
+              "Unix timestamp of registration"
+            ],
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ]
+}
