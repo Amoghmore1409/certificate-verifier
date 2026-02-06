@@ -288,7 +288,7 @@ export default function DashboardPage() {
           No certificates issued yet.
         </p>
       ) : (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-8">
           {certs.map((c) => (
             <CertificateCard
               key={c.publicKey.toBase58()}
