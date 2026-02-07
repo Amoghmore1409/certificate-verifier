@@ -5,7 +5,7 @@ import { PublicKey } from "@solana/web3.js";
 // Also update: Anchor.toml, .env.local, and the IDL metadata.
 export const PROGRAM_ID = new PublicKey(
   process.env.NEXT_PUBLIC_PROGRAM_ID ||
-    "X85toAsqo5upL52MeH7NoCUcNYvzVCG5EFzrSK2f4Tn"
+    "8exNmXgWUKijpNmQTAGhpaLeXSorGZmcExT2LTrFhogj"
 );
 
 // ─── Network ─────────────────────────────────────────────────────

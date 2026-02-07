@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("X85toAsqo5upL52MeH7NoCUcNYvzVCG5EFzrSK2f4Tn");
+declare_id!("8exNmXgWUKijpNmQTAGhpaLeXSorGZmcExT2LTrFhogj");
 
 // ============================================================================
 // CertiChain — On-Chain Certificate Issuance & Verification

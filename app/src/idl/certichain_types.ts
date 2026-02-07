@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/certichain.json`.
  */
 export type Certichain = {
-  "address": "X85toAsqo5upL52MeH7NoCUcNYvzVCG5EFzrSK2f4Tn",
+  "address": "8exNmXgWUKijpNmQTAGhpaLeXSorGZmcExT2LTrFhogj",
   "metadata": {
     "name": "certichain",
     "version": "0.1.0",
